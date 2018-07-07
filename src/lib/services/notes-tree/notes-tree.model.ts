@@ -1,6 +1,7 @@
 import { SourceFile } from '../../entities/source-file.entity';
 import { Note } from '../../entities/note.entity';
 
+
 export type DigestEntry = SourceFile | Note;
 
 export function isSourceFile(entry: DigestEntry): entry is SourceFile {

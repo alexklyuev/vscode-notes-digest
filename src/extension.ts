@@ -6,12 +6,15 @@ import { FileScanner } from './lib/services/file-scanner/file-scanner';
 import { NotesTreeProvider } from './lib/services/notes-tree/notes-tree-provider';
 import { SourceFile } from './lib/entities/source-file.entity';
 import { TextScanner } from './lib/services/text-scanner/text-scanner';
+import { TextMarker } from './lib/entities/text-marker.entity';
 
 
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+
+    const textMarker = new TextMarker('TODO:');
 
     const notesTreeProvider = new NotesTreeProvider();
     vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);
@@ -37,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
                 Promise.all(
                     files
                     .map(file => new SourceFile(file, projectRoot))
-                    .map(sourceFile => new TextScanner(sourceFile))
+                    .map(sourceFile => new TextScanner(sourceFile, textMarker))
                     .map(scanner => scanner.notes)
                 )
                 .then(colls => {

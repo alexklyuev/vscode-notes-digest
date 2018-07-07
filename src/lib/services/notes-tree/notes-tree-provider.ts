@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { DigestEntry } from './notes-tree.model';
 
+
 export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
 
-    private items: DigestEntry[] = [];
+    private items = new Array<DigestEntry>();
 
     private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
     onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
