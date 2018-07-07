@@ -2,7 +2,7 @@
     "name": "notes-digest",
     "displayName": "notes-digest",
     "description": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "kontrail",
     "engines": {
         "vscode": "^1.24.0"
@@ -20,7 +20,15 @@
                 "command": "ndi.scan",
                 "title": "Scan for notes"
             }
-        ]
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "notes-digest.view",
+                    "name": "Notes Digest"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
