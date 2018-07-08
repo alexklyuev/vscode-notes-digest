@@ -33,9 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (vscode.workspace.rootPath) {
             const projectRoot = vscode.workspace.rootPath;
             const fileScanner = new FileScanner(projectRoot);
-            // Display a message box to the user
             fileScanner.findAll().then(files => {
-                vscode.window.showInformationMessage('Scan complete!');
                 Promise.all(
                     files
                     .map(file => new SourceFile(file, projectRoot))

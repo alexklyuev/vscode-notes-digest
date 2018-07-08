@@ -19,9 +19,6 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
         const label = element.toString();
         if (element instanceof SourceFile) {
             return new vscode.TreeItem(label, vscode.TreeItemCollapsibleState.Expanded);
-        }
-        else if (element instanceof Note) {
-            return new vscode.TreeItem(label);
         } else {
             return new vscode.TreeItem(label);
         }
