@@ -14,7 +14,7 @@ export class Note {
     toString(): string {
         const textStartIndex = this.line.indexOf(this.textMarker.text) + this.textMarker.text.length;
         const text = this.line.slice(textStartIndex);
-        return `${this.lineNumber}: ${text}`;
+        return `${this.lineNumber}:${textStartIndex} ${text}`;
     }
 
 }

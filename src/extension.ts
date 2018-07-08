@@ -36,7 +36,6 @@ export function activate(context: vscode.ExtensionContext) {
             // Display a message box to the user
             fileScanner.findAll().then(files => {
                 vscode.window.showInformationMessage('Scan complete!');
-                // notesTreeProvider.setItems(files.map(file => new SourceFile(file, projectRoot)));
                 Promise.all(
                     files
                     .map(file => new SourceFile(file, projectRoot))
@@ -44,11 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
                     .map(scanner => scanner.notes)
                 )
                 .then(colls => {
-                    const notes =colls.reduce((acc, coll) => acc.concat(coll), []);
+                    const notes = colls.reduce((acc, coll) => acc.concat(coll), []);
                     notesTreeProvider.setItems(notes);
                 });
-                // vscode.window.createWebviewPanel();
-                // vscode.window.createTreeView();
             });
         }
 
