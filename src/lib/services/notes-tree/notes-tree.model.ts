@@ -1,25 +1,7 @@
 import { SourceFile } from '../../entities/source-file.entity';
 import { Note } from '../../entities/note.entity';
+import { TreeStatusElement } from '../../entities/tree-status.entity';
 
-
-export enum TreeStatus {
-    IDLE = 1,
-    PROGRESS,
-    DONE,
-}
-
-export class TreeStatusElement {
-
-    constructor(
-        public readonly status: TreeStatus,
-        public readonly message: string,
-    ) {}
-
-    toString(): string {
-        return this.message;
-    }
-
-}
 
 export type DigestEntry = SourceFile | Note | TreeStatusElement;
 

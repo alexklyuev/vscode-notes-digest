@@ -8,8 +8,7 @@ import { NotesTreeProvider } from './lib/services/notes-tree/notes-tree-provider
 import { SourceFile } from './lib/entities/source-file.entity';
 import { TextScanner } from './lib/services/text-scanner/text-scanner';
 import { TextMarker } from './lib/entities/text-marker.entity';
-import { TreeStatus } from './lib/services/notes-tree/notes-tree.model';
-
+import { TreeStatus } from './lib/entities/tree-status.entity';
 
 
 // this method is called when your extension is activated
@@ -52,10 +51,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
     });
-
-    setTimeout(() => {
-        vscode.commands.executeCommand('ndi.scan');
-    }, 1000);
 
     context.subscriptions.push(disposable);
 }

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import { DigestEntry, TreeStatus, TreeStatusElement } from './notes-tree.model';
+import { DigestEntry } from './notes-tree.model';
 import { Note } from '../../entities/note.entity';
 import { SourceFile } from '../../entities/source-file.entity';
+import { TreeStatus, TreeStatusElement } from '../../entities/tree-status.entity';
 
 
 export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {

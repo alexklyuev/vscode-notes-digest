@@ -25,13 +25,10 @@ export class TextScanner {
             readInterface.on('line', (line: string) => {
                 counter += 1;
                 this.textMarkers
-                // TODO: filter
+                .filter(textMarker => textMarker.pattern.test(line))
                 .forEach(textMarker => {
-                    const test = textMarker.pattern.test(line);
-                    if (test) {
-                        const note = new Note(this.sourceFile, line, counter, textMarker);
-                        notes.push(note);
-                    }
+                    const note = new Note(this.sourceFile, line, counter, textMarker);
+                    notes.push(note);
                 });
             });
             readInterface.on('close', () => resolve(notes));

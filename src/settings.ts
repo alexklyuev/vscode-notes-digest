@@ -1,4 +1,4 @@
 export const settings = Object.freeze({
-    globPattern: '{*/**.js,*/**.ts}',
+    globPattern: '{!(node_modules)/**/*.js,!(node_modules)/**/*.ts}',
     textMarkers: ['TODO:'],
 });
