@@ -1,13 +1,13 @@
 const glob = require('glob');
 
 export class FileScanner {
-    public readonly pattern = '*.js';
     public readonly options = Object.freeze({
         absolute: true,
     });
-
+    
     constructor(
         public readonly projectDir: string,
+        public readonly pattern: string,
     ) {}
     
     public findAll(): Promise<string[]> {
@@ -17,6 +17,7 @@ export class FileScanner {
                 if (err) {
                     reject(err);
                 } else {
+                    console.info('files.length', files.length);
                     resolve(files);
                 }
             });

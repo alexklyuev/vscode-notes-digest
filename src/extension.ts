@@ -2,11 +2,13 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { settings } from './settings';
 import { FileScanner } from './lib/services/file-scanner/file-scanner';
 import { NotesTreeProvider } from './lib/services/notes-tree/notes-tree-provider';
 import { SourceFile } from './lib/entities/source-file.entity';
 import { TextScanner } from './lib/services/text-scanner/text-scanner';
 import { TextMarker } from './lib/entities/text-marker.entity';
+import { TreeStatus } from './lib/services/notes-tree/notes-tree.model';
 
 
 
@@ -14,7 +16,7 @@ import { TextMarker } from './lib/entities/text-marker.entity';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    const textMarker = new TextMarker('TODO:');
+    const textMarkers = settings.textMarkers.map(marker => new TextMarker(marker));
 
     const notesTreeProvider = new NotesTreeProvider();
     vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);
@@ -32,22 +34,28 @@ export function activate(context: vscode.ExtensionContext) {
         
         if (vscode.workspace.rootPath) {
             const projectRoot = vscode.workspace.rootPath;
-            const fileScanner = new FileScanner(projectRoot);
+            const fileScanner = new FileScanner(projectRoot, settings.globPattern);
+            notesTreeProvider.setStatus(TreeStatus.PROGRESS);
             fileScanner.findAll().then(files => {
                 Promise.all(
                     files
                     .map(file => new SourceFile(file, projectRoot))
-                    .map(sourceFile => new TextScanner(sourceFile, textMarker))
+                    .map(sourceFile => new TextScanner(sourceFile, textMarkers))
                     .map(scanner => scanner.notes)
                 )
                 .then(colls => {
                     const notes = colls.reduce((acc, coll) => acc.concat(coll), []);
                     notesTreeProvider.setItems(notes);
+                    notesTreeProvider.setStatus(TreeStatus.DONE);
                 });
             });
         }
 
     });
+
+    setTimeout(() => {
+        vscode.commands.executeCommand('ndi.scan');
+    }, 1000);
 
     context.subscriptions.push(disposable);
 }

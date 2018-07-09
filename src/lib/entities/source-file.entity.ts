@@ -10,7 +10,7 @@ export class SourceFile {
     }
 
     toString(): string {
-        return this.absolutePath.slice(this.projectAbsolutePath.length);
+        return this.absolutePath.slice(this.projectAbsolutePath.length + 1);
     }
 
 }

@@ -11,7 +11,7 @@ export class TextScanner {
 
     constructor(
         public readonly sourceFile: SourceFile,
-        public readonly textMarker: TextMarker,
+        public readonly textMarkers: TextMarker[],
     ) {
         this.notes = this.read();
     }
@@ -24,11 +24,15 @@ export class TextScanner {
             const notes = new Array<Note>();
             readInterface.on('line', (line: string) => {
                 counter += 1;
-                const test = this.textMarker.pattern.test(line);
-                if (test) {
-                    const note = new Note(this.sourceFile, line, counter, this.textMarker);
-                    notes.push(note);
-                }
+                this.textMarkers
+                // TODO: filter
+                .forEach(textMarker => {
+                    const test = textMarker.pattern.test(line);
+                    if (test) {
+                        const note = new Note(this.sourceFile, line, counter, textMarker);
+                        notes.push(note);
+                    }
+                });
             });
             readInterface.on('close', () => resolve(notes));
         });
