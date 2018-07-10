@@ -1,12 +1,13 @@
+import * as vscode from 'vscode';
 import { SourceDir } from './source-dir.entity';
 import { settings } from '../../settings';
-
 const path = require('path');
 
 export class SourceFile {
 
         public readonly relativePath: string;
         public readonly name: string;
+        public readonly uri: vscode.Uri;
         public readonly sourceDirs: ReadonlyArray<SourceDir>;
         public readonly parentSourceDir: SourceDir;
 
@@ -16,6 +17,7 @@ export class SourceFile {
     ) {
         this.relativePath = absolutePath.slice(projectAbsolutePath.length + path.sep.length);
         this.name = path.basename(this.absolutePath);
+        this.uri = vscode.Uri.parse(`file://${this.absolutePath}`);
         this.sourceDirs = this.getInnerDirs();
         this.parentSourceDir = this.sourceDirs[this.sourceDirs.length - 1];
     }

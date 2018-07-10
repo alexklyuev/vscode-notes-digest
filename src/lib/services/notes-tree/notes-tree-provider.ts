@@ -21,14 +21,27 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
         public flatMode: boolean = false,
     ) {
     }
-    
+
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
         const label = element.toString();
         if (element instanceof SourceDir) {
             const collapsibleState = element.isProjectRoot ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
             return new vscode.TreeItem(label, collapsibleState);
         } else if (element instanceof SourceFile) {
-            return new vscode.TreeItem(label, vscode.TreeItemCollapsibleState.Collapsed);
+            const fileItem = new vscode.TreeItem(label, vscode.TreeItemCollapsibleState.Collapsed);
+            return fileItem;
+        } else if (element instanceof Note) {
+            const noteItem = new vscode.TreeItem(label);
+            noteItem.command = {
+                title: 'Open',
+                command: 'ndi.openFile',
+                arguments: [
+                    element.sourceFile.uri,
+                    element.lineNumber,
+                    element.columnNumber,
+                ],
+            };
+            return noteItem;
         } else {
             return new vscode.TreeItem(label);
         }

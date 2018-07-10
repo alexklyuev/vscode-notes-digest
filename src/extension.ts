@@ -1,48 +1,37 @@
-'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { settings } from './settings';
-import { FileScanner } from './lib/services/file-scanner/file-scanner';
 import { NotesTreeProvider } from './lib/services/notes-tree/notes-tree-provider';
-import { SourceFile } from './lib/entities/source-file.entity';
-import { TextScanner } from './lib/services/text-scanner/text-scanner';
-import { TextMarker } from './lib/entities/text-marker.entity';
-import { TreeStatus } from './lib/entities/tree-status.entity';
 import { ProjectTreeBuilder } from './lib/services/project-tree-builder/project-tree-builder';
 
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
     const notesTreeProvider = new NotesTreeProvider();
     vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "notes-digest" is now active!');
-    
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('ndi.scan', () => {
-        // The code you place here will be executed every time your command is executed
-        
+    const openFileDisposable = vscode.commands.registerCommand('ndi.openFile', (uri: vscode.Uri, lineNumber: number, column: number) => {
+        vscode.commands.executeCommand('vscode.open', uri)
+        .then(() => {
+            const editor = vscode.window.activeTextEditor!;
+            const position = editor.selection.active;
+            const newPosition = position.with(lineNumber - 1, column);
+            const newSelection = new vscode.Selection(newPosition, newPosition);
+            editor.selection = newSelection;
+        });
+    });
+
+    const scanDisponsable = vscode.commands.registerCommand('ndi.scan', () => {
         if (vscode.workspace.rootPath) {
             (new ProjectTreeBuilder(
                 notesTreeProvider,
                 vscode.workspace.rootPath,
             ))
             .run()
-            .catch(err => console.info('err', err));
+            .catch(err => console.error('err', err));
         }
-
     });
 
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(scanDisponsable, openFileDisposable);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
 }
