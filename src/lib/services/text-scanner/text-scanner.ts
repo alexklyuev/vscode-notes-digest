@@ -7,7 +7,8 @@ const fs = require('fs');
 
 
 export class TextScanner {
-    public readonly notes: Promise<Note[]>;
+
+        public readonly notes: Promise<Note[]>;
 
     constructor(
         public readonly sourceFile: SourceFile,

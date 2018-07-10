@@ -1,5 +1,6 @@
 export class TextMarker {
-    public readonly pattern: RegExp;
+
+        public readonly pattern: RegExp;
 
     constructor(
         public readonly text: string,

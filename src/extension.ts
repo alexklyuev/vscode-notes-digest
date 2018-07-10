@@ -9,18 +9,16 @@ import { SourceFile } from './lib/entities/source-file.entity';
 import { TextScanner } from './lib/services/text-scanner/text-scanner';
 import { TextMarker } from './lib/entities/text-marker.entity';
 import { TreeStatus } from './lib/entities/tree-status.entity';
+import { ProjectTreeBuilder } from './lib/services/project-tree-builder/project-tree-builder';
 
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    const textMarkers = settings.textMarkers.map(marker => new TextMarker(marker));
-
     const notesTreeProvider = new NotesTreeProvider();
     vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);
 
-    
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "notes-digest" is now active!');
@@ -32,22 +30,12 @@ export function activate(context: vscode.ExtensionContext) {
         // The code you place here will be executed every time your command is executed
         
         if (vscode.workspace.rootPath) {
-            const projectRoot = vscode.workspace.rootPath;
-            const fileScanner = new FileScanner(projectRoot, settings.globPattern);
-            notesTreeProvider.setStatus(TreeStatus.PROGRESS);
-            fileScanner.findAll().then(files => {
-                Promise.all(
-                    files
-                    .map(file => new SourceFile(file, projectRoot))
-                    .map(sourceFile => new TextScanner(sourceFile, textMarkers))
-                    .map(scanner => scanner.notes)
-                )
-                .then(colls => {
-                    const notes = colls.reduce((acc, coll) => acc.concat(coll), []);
-                    notesTreeProvider.setItems(notes);
-                    notesTreeProvider.setStatus(TreeStatus.DONE);
-                });
-            });
+            (new ProjectTreeBuilder(
+                notesTreeProvider,
+                vscode.workspace.rootPath,
+            ))
+            .run()
+            .catch(err => console.info('err', err));
         }
 
     });

@@ -1,6 +1,8 @@
 const glob = require('glob');
 
+
 export class FileScanner {
+
     public readonly options = Object.freeze({
         absolute: true,
     });
@@ -17,7 +19,6 @@ export class FileScanner {
                 if (err) {
                     reject(err);
                 } else {
-                    console.info('files.length', files.length);
                     resolve(files);
                 }
             });

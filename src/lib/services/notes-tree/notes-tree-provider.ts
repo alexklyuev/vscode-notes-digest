@@ -3,27 +3,31 @@ import { DigestEntry } from './notes-tree.model';
 import { Note } from '../../entities/note.entity';
 import { SourceFile } from '../../entities/source-file.entity';
 import { TreeStatus, TreeStatusElement } from '../../entities/tree-status.entity';
+import { SourceDir } from '../../entities/source-dir.entity';
 
 
 export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
 
-    private items = new Array<Note>();
+        private notes = Array<Note>();
+        private files = Array<SourceFile>();
+        private dirs = Array<SourceDir>();
 
-    private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
+        private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
 
-    /**
-     * //
-     */
-    public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
+        public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
 
     constructor(
-        private status: TreeStatus = TreeStatus.IDLE,
+        public status: TreeStatus = TreeStatus.IDLE,
+        public flatMode: boolean = false,
     ) {
     }
     
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
         const label = element.toString();
-        if (element instanceof SourceFile) {
+        if (element instanceof SourceDir) {
+            const collapsibleState = element.isProjectRoot ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+            return new vscode.TreeItem(label, collapsibleState);
+        } else if (element instanceof SourceFile) {
             return new vscode.TreeItem(label, vscode.TreeItemCollapsibleState.Collapsed);
         } else {
             return new vscode.TreeItem(label);
@@ -31,39 +35,70 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
     }
 
     getChildren(element?: DigestEntry): vscode.ProviderResult<DigestEntry[]> {
-        if (!element) {
-            switch (this.status) {
-                case TreeStatus.IDLE:
-                    return [new TreeStatusElement(TreeStatus.IDLE, '<idle>')];
-                case TreeStatus.PROGRESS:
-                    return [new TreeStatusElement(TreeStatus.IDLE, '<progress...>')];
-                case TreeStatus.DONE:
-                return this.items.reduce<SourceFile[]>((acc, item) => {
-                    if (acc.indexOf(item.sourceFile) === -1) {
-                        acc.push(item.sourceFile);
-                    }
-                    return acc;
-                }, []);
+        if (this.flatMode) {
+            if (!element) {
+                switch (this.status) {
+                    case TreeStatus.IDLE:
+                        return [new TreeStatusElement(TreeStatus.IDLE, '<idle>')];
+                    case TreeStatus.PROGRESS:
+                        return [new TreeStatusElement(TreeStatus.PROGRESS, '<progress...>')];
+                    case TreeStatus.DONE:
+                        return this.files;
+                }
+            } else if (element instanceof SourceFile) {
+                return this.notes.filter(item => item.sourceFile.equal(element));
+            } else if (element instanceof Note) {
+                return null;
+            } else {
+                return null;
             }
-        }
-        if (element instanceof SourceFile) {
-            return this.items.filter(item => item.sourceFile === element);
-        }
-        if (element instanceof Note) {
-            return null;
+        } else {
+            if (!element) {
+                return this.dirs.reduce<[SourceDir] | null>((acc, dir) => {
+                    return dir.isProjectRoot ? [dir] : acc;
+                }, null);
+            } else if (element instanceof SourceDir) {
+                const childDirs = this.dirs.filter(dir => dir.parentSourceDir.equal(element));
+                const childFiles = this.files.filter(file => file.parentSourceDir.equal(element));
+                return Array().concat(childDirs).concat(childFiles);
+            } else if (element instanceof SourceFile) {
+                return this.notes.filter(item => item.sourceFile.equal(element));
+            } else if (element instanceof Note) {
+                return null;
+            } else {
+                return null;
+            }
         }
     }
 
     getParent(element: DigestEntry): vscode.ProviderResult<DigestEntry> {
         if (element instanceof Note) {
             return element.sourceFile;
+        } else if (element instanceof SourceFile) {
+            return element.parentSourceDir;
+        } else if (element instanceof SourceDir) {
+            return element.isProjectRoot ? null : element.parentSourceDir;
         } else {
             return null;
         }
     }
 
     public setItems(items: Note[]): void {
-        this.items = items;
+        this.notes = items;
+        this.files = this.notes.reduce<SourceFile[]>((acc, item) => {
+            if (acc.indexOf(item.sourceFile) === -1) {
+                acc.push(item.sourceFile);
+            }
+            return acc;
+        }, []);
+        this.dirs = this.files.reduce<SourceDir[]>((acc, file) => {
+            file.sourceDirs.forEach(dir => {
+                if (!acc.some(accItem => accItem.equal(dir))) {
+                    acc.push(dir);
+                }
+            });
+            return acc;
+        }, []);
     }
 
     public setStatus(status: TreeStatus): void {
