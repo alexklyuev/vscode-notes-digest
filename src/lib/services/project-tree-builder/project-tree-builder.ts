@@ -14,28 +14,26 @@ export class ProjectTreeBuilder {
         public projectPath: string,
     ) {}
 
-    public run() {
+    public async run() {
         const fileScanner = new FileScanner(this.projectPath, settings.globPattern);
         this.notesTreeProvider.setStatus(TreeStatus.PROGRESS);
         const textMarkers = settings.textMarkers.map(marker => new TextMarker(marker));
-        return fileScanner.findAll().then(files => {
-            Promise.all(
+        try {
+            const files = await fileScanner.findAll();
+            const noteCollections = await Promise.all(
                 files
                 .map(file => new SourceFile(file, this.projectPath))
                 .map(sourceFile => new TextScanner(sourceFile, textMarkers))
                 .map(scanner => scanner.notes)
-            )
-            .then(colls => {
-                const notes = colls.reduce((acc, coll) => acc.concat(coll), []);
-                this.notesTreeProvider.setItems(notes);
-                this.notesTreeProvider.setStatus(TreeStatus.DONE);
-            })
-            .catch(err => {
-                console.info('ProjectTreeBuilder#run error', err);
-                this.notesTreeProvider.setItems([]);
-                this.notesTreeProvider.setStatus(TreeStatus.DONE);
-            });
-        });
+            );
+            const notes = noteCollections.reduce((acc, coll) => acc.concat(coll), []);
+            this.notesTreeProvider.setItems(notes);
+            this.notesTreeProvider.setStatus(TreeStatus.DONE);
+        } catch (err) {
+            console.info('ProjectTreeBuilder#run error', err);
+            this.notesTreeProvider.setItems([]);
+            this.notesTreeProvider.setStatus(TreeStatus.DONE);
+        }
     }
 
 }
