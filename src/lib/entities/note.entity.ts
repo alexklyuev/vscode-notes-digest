@@ -23,7 +23,7 @@ export class Note {
 
     private format(): string {
         const text = this.line.slice(this.columnNumber);
-        return `[${this.lineNumber}:${this.columnNumber}] ${text}`;
+        return `${this.textMarker.text.toLowerCase()} [${this.lineNumber}:${this.columnNumber}] ${text}`;
     }
 
 }
