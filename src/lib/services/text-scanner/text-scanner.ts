@@ -1,9 +1,8 @@
 import { SourceFile } from '../../entities/source-file.entity';
 import { Note } from '../../entities/note.entity';
 import { TextMarker } from '../../entities/text-marker.entity';
-
-const readline = require('readline');
-const fs = require('fs');
+import * as readline from 'readline';
+import * as fs from 'fs';
 
 
 export class TextScanner {

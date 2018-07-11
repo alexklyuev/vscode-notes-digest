@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { SourceDir } from './source-dir.entity';
-const path = require('path');
+
 
 export class SourceFile {
 
