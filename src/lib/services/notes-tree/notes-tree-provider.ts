@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { DigestEntry } from './notes-tree.model';
 import { Note } from '../../entities/note.entity';
 import { SourceFile } from '../../entities/source-file.entity';
-import { TreeStatus, TreeStatusElement } from '../../entities/tree-status.entity';
 import { SourceDir } from '../../entities/source-dir.entity';
 
 
@@ -15,12 +14,6 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
         private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
 
         public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
-
-    constructor(
-        public status: TreeStatus = TreeStatus.IDLE,
-        public flatMode: boolean = false,
-    ) {
-    }
 
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
         const label = element.toString();
@@ -48,39 +41,20 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
     }
 
     getChildren(element?: DigestEntry): vscode.ProviderResult<DigestEntry[]> {
-        if (this.flatMode) {
-            if (!element) {
-                switch (this.status) {
-                    case TreeStatus.IDLE:
-                        return [new TreeStatusElement(TreeStatus.IDLE, '<idle>')];
-                    case TreeStatus.PROGRESS:
-                        return [new TreeStatusElement(TreeStatus.PROGRESS, '<progress...>')];
-                    case TreeStatus.DONE:
-                        return this.files;
-                }
-            } else if (element instanceof SourceFile) {
-                return this.notes.filter(item => item.sourceFile.equal(element));
-            } else if (element instanceof Note) {
-                return null;
-            } else {
-                return null;
-            }
+        if (!element) {
+            return this.dirs.reduce<[SourceDir] | null>((acc, dir) => {
+                return dir.isProjectRoot ? [dir] : acc;
+            }, null);
+        } else if (element instanceof SourceDir) {
+            const childDirs = this.dirs.filter(dir => dir.parentSourceDir.equal(element));
+            const childFiles = this.files.filter(file => file.parentSourceDir.equal(element));
+            return Array().concat(childDirs).concat(childFiles);
+        } else if (element instanceof SourceFile) {
+            return this.notes.filter(item => item.sourceFile.equal(element));
+        } else if (element instanceof Note) {
+            return null;
         } else {
-            if (!element) {
-                return this.dirs.reduce<[SourceDir] | null>((acc, dir) => {
-                    return dir.isProjectRoot ? [dir] : acc;
-                }, null);
-            } else if (element instanceof SourceDir) {
-                const childDirs = this.dirs.filter(dir => dir.parentSourceDir.equal(element));
-                const childFiles = this.files.filter(file => file.parentSourceDir.equal(element));
-                return Array().concat(childDirs).concat(childFiles);
-            } else if (element instanceof SourceFile) {
-                return this.notes.filter(item => item.sourceFile.equal(element));
-            } else if (element instanceof Note) {
-                return null;
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 
@@ -112,10 +86,6 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
             });
             return acc;
         }, []);
-    }
-
-    public setStatus(status: TreeStatus): void {
-        this.status = status;
         this.changeEventEmitter.fire();
     }
 

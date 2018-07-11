@@ -1,10 +1,9 @@
 import { SourceDir } from '../../entities/source-dir.entity';
 import { SourceFile } from '../../entities/source-file.entity';
 import { Note } from '../../entities/note.entity';
-import { TreeStatusElement } from '../../entities/tree-status.entity';
 
 
-export type DigestEntry = SourceDir | SourceFile | Note | TreeStatusElement;
+export type DigestEntry = SourceDir | SourceFile | Note;
 
 export function isSourceFile(entry: DigestEntry): entry is SourceFile {
     return entry instanceof SourceFile;

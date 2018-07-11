@@ -1,5 +1,4 @@
 import { NotesTreeProvider } from '../notes-tree/notes-tree-provider';
-import { TreeStatus } from '../../entities/tree-status.entity';
 import { FileScanner } from '../file-scanner/file-scanner';
 import { settings } from '../../../settings';
 import { SourceFile } from '../../entities/source-file.entity';
@@ -16,7 +15,6 @@ export class ProjectTreeBuilder {
 
     public async run() {
         const fileScanner = new FileScanner(this.projectPath, settings.globPattern);
-        this.notesTreeProvider.setStatus(TreeStatus.PROGRESS);
         const textMarkers = settings.textMarkers.map(marker => new TextMarker(marker));
         try {
             const files = await fileScanner.findAll();
@@ -28,11 +26,9 @@ export class ProjectTreeBuilder {
             );
             const notes = noteCollections.reduce((acc, coll) => acc.concat(coll), []);
             this.notesTreeProvider.setItems(notes);
-            this.notesTreeProvider.setStatus(TreeStatus.DONE);
         } catch (err) {
             console.info('ProjectTreeBuilder#run error', err);
             this.notesTreeProvider.setItems([]);
-            this.notesTreeProvider.setStatus(TreeStatus.DONE);
         }
     }
 

@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { SourceDir } from './source-dir.entity';
-import { settings } from '../../settings';
 const path = require('path');
 
 export class SourceFile {
@@ -23,7 +22,7 @@ export class SourceFile {
     }
 
     toString(): string {
-        return settings.flatModeDefault ? this.name : this.relativePath;
+        return this.name;
     }
 
     equal(file: SourceFile): boolean {
