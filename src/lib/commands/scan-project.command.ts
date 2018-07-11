@@ -8,13 +8,15 @@ export class ScanProjectCommand implements CommandContainer {
 
     public readonly commandName = 'ndi.scan';
 
+    constructor(
+        private notesTreeProvider: NotesTreeProvider,
+    ) {}
+
     public register() {
-        const notesTreeProvider = new NotesTreeProvider();
-        vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);    
         return vscode.commands.registerCommand(this.commandName, () => {
             if (vscode.workspace.rootPath) {
                 (new ProjectTreeBuilder(
-                    notesTreeProvider,
+                    this.notesTreeProvider,
                     vscode.workspace.rootPath,
                 ))
                 .run()

@@ -2,7 +2,7 @@
     "name": "notes-digest",
     "displayName": "notes-digest",
     "description": "",
-    "version": "0.0.5",
+    "version": "0.1.0",
     "publisher": "kontrail",
     "engines": {
         "vscode": "^1.24.0"
@@ -11,7 +11,10 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:ndi.scan"
+        "onCommand:ndi.scan",
+        "onView:notes-digest.view",
+        "onLanguage:typescript",
+        "onLanguage:javascript"
     ],
     "main": "./out/extension",
     "contributes": {
