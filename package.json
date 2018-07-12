@@ -31,7 +31,29 @@
                     "name": "Notes Digest"
                 }
             ]
-        }
+        },
+        "configuration":[
+            {
+                "title": "Notes Digest",
+                "properties": {
+                    "ndi.globPattern": {
+                        "type": "string",
+                        "default": "{!(node_modules)/**/*.js,!(node_modules)/**/*.ts,*.js,*.ts}",
+                        "description": "Files to search for notes",
+                        "scope": "window"
+                    },
+                    "ndi.textMarkers": {
+                        "type": "array",
+                        "default": ["TODO:", "FIXME:"],
+                        "description": "Search targets",
+                        "items": {
+                            "type":"string"
+                        },
+                        "scope": "window"
+                    }
+                }
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

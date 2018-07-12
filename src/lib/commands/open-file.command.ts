@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { CommandContainer } from './models/command-container.model';
-import { COMMANDS } from '../../config/constants';
+import { COMMANDS } from '../config/constants';
 
 
 export class OpenFileCommand implements CommandContainer {
