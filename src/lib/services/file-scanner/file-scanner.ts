@@ -1,6 +1,9 @@
 import * as glob from 'glob';
 
 
+/**
+ * TODO: consider using vscode.workspace.findFiles ()
+ */
 export class FileScanner {
 
     public readonly options = Object.freeze({

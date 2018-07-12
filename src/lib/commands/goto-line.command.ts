@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { CommandContainer } from './models/command-container.model';
+import { COMMANDS } from '../../config/constants';
 
 
 export class GotoLineCommand implements CommandContainer {
 
-    public readonly commandName = 'ndi.gotoLine';
+    public readonly commandName = COMMANDS.gotoLine;
 
     public register() {
         return vscode.commands.registerCommand(this.commandName, (lineNumber: number, columnNumber: number = 0) => {
