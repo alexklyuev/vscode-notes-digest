@@ -1,8 +1,8 @@
 {
     "name": "notes-digest",
-    "displayName": "notes-digest",
+    "displayName": "Notes Digest",
     "description": "",
-    "version": "0.1.0",
+    "version": "0.9.0",
     "publisher": "kontrail",
     "engines": {
         "vscode": "^1.24.0"
@@ -11,8 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:ndi.scan",
-        "onView:notes-digest.view",
+        "onCommand:notesDigest.scan",
+        "onView:notesDigest.view",
         "onLanguage:typescript",
         "onLanguage:javascript"
     ],
@@ -20,14 +20,14 @@
     "contributes": {
         "commands": [
             {
-                "command": "ndi.scan",
+                "command": "notesDigest.scan",
                 "title": "Scan for notes"
             }
         ],
         "views": {
             "explorer": [
                 {
-                    "id": "notes-digest.view",
+                    "id": "notesDigest.view",
                     "name": "Notes Digest"
                 }
             ]
@@ -36,13 +36,13 @@
             {
                 "title": "Notes Digest",
                 "properties": {
-                    "ndi.globPattern": {
+                    "notesDigest.globPattern": {
                         "type": "string",
                         "default": "{!(node_modules)/**/*.js,!(node_modules)/**/*.ts,*.js,*.ts}",
                         "description": "Files to search for notes",
                         "scope": "window"
                     },
-                    "ndi.textMarkers": {
+                    "notesDigest.textMarkers": {
                         "type": "array",
                         "default": ["TODO:", "FIXME:"],
                         "description": "Search targets",

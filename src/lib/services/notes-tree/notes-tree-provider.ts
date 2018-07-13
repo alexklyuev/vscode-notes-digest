@@ -3,6 +3,7 @@ import { DigestEntry } from './notes-tree.model';
 import { Note } from '../../entities/note.entity';
 import { SourceFile } from '../../entities/source-file.entity';
 import { SourceDir } from '../../entities/source-dir.entity';
+import { COMMANDS } from '../../config/constants';
 
 
 export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
@@ -27,7 +28,7 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
             const noteItem = new vscode.TreeItem(label);
             noteItem.command = {
                 title: 'Open',
-                command: 'ndi.openFile',
+                command: COMMANDS.openFile,
                 arguments: [
                     element.sourceFile.uri,
                     element.lineNumber,

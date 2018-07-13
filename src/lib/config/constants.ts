@@ -1,4 +1,4 @@
-export const NS = 'ndi';
+export const NS = 'notesDigest';
 
 export const COMMANDS = Object.freeze({
     gotoLine: `${NS}.gotoLine`,

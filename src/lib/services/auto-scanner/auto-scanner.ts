@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
+import { COMMANDS } from '../../config/constants';
 
 
 export class AutoScanner {
 
     private readonly callback = (_event?: any) => {
-        vscode.commands.executeCommand('ndi.scan');
+        vscode.commands.executeCommand(COMMANDS.scan);
     }
 
     /**

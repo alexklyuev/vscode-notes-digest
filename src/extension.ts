@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
     const textMarkers = configWrapper.get<string[]>('textMarkers');
 
     const notesTreeProvider = new NotesTreeProvider();
-    vscode.window.registerTreeDataProvider('notes-digest.view', notesTreeProvider);
+    vscode.window.registerTreeDataProvider('notesDigest.view', notesTreeProvider);
 
     context.subscriptions.push(
         (new GotoLineCommand()).register(),
