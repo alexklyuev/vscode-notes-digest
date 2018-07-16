@@ -10,6 +10,9 @@ export class ScanProjectCommand implements CommandContainer {
         public notesTreeProvider: NotesTreeProvider,
     ) {}
 
+    /**
+     * TODO: rootPath is deprecated, should use workspaceFolders
+     */
     public register(commandName: string) {
         return vscode.commands.registerCommand(
             commandName, 
