@@ -8,8 +8,6 @@ export class ScanProjectCommand implements CommandContainer {
 
     constructor(
         public notesTreeProvider: NotesTreeProvider,
-        public textMarkersConfig: string[],
-        public globPattern: string,
     ) {}
 
     public register(commandName: string) {
@@ -20,8 +18,6 @@ export class ScanProjectCommand implements CommandContainer {
                     (new ProjectTreeBuilder(
                         this.notesTreeProvider,
                         vscode.workspace.rootPath,
-                        this.textMarkersConfig,
-                        this.globPattern,
                     ))
                     .run()
                     .catch(error => console.error('ScanProjectCommand error', error));

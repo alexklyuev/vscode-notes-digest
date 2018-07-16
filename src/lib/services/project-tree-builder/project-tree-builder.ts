@@ -12,14 +12,12 @@ export class ProjectTreeBuilder {
     constructor(
         public notesTreeProvider: NotesTreeProvider,
         public projectPath: string,
-        public textMarkersConfig: string[],
-        public globPattern: string,
     ) {
-        this.textMarkers = this.textMarkersConfig.map(text => new TextMarker(text));
+        this.textMarkers = this.notesTreeProvider.textMarkers.map(text => new TextMarker(text));
     }
 
     public async run() {
-        const fileScanner = new FileScanner(this.projectPath, this.globPattern);
+        const fileScanner = new FileScanner(this.projectPath, this.notesTreeProvider.globPattern);
         try {
             const files = await fileScanner.findAll();
             const noteCollections = await Promise.all(
@@ -31,7 +29,7 @@ export class ProjectTreeBuilder {
             const notes = noteCollections.reduce((acc, coll) => acc.concat(coll), []);
             this.notesTreeProvider.setItems(notes);
         } catch (err) {
-            console.info('ProjectTreeBuilder#run error', err);
+            console.error('ProjectTreeBuilder#run error', err);
             this.notesTreeProvider.setItems([]);
         }
     }

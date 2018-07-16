@@ -14,17 +14,13 @@ export function activate(context: vscode.ExtensionContext) {
     const globPattern = configWrapper.get<string>('globPattern');
     const textMarkers = configWrapper.get<string[]>('textMarkers');
 
-    const notesTreeProvider = new NotesTreeProvider();
+    const notesTreeProvider = new NotesTreeProvider(textMarkers, globPattern);
     vscode.window.registerTreeDataProvider(VIEWS.treeView, notesTreeProvider);
 
     context.subscriptions.push(
         (new GotoLineCommand()).register(COMMANDS.gotoLine),
         (new OpenFileCommand()).register(COMMANDS.openFile),
-        (new ScanProjectCommand(
-            notesTreeProvider,
-            textMarkers,
-            globPattern,
-        )).register(COMMANDS.scan),
+        (new ScanProjectCommand(notesTreeProvider)).register(COMMANDS.scan),
     );
 
     (new AutoScanner()).run();

@@ -16,6 +16,11 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
 
         public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
 
+    constructor(
+        public readonly textMarkers: string[],
+        public readonly globPattern: string,
+    ) {}
+
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
         const label = element.toString();
         if (element instanceof SourceDir) {
