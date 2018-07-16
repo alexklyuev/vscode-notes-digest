@@ -11,17 +11,17 @@ import { COMMANDS, VIEWS } from './lib/config/constants';
 export function activate(context: vscode.ExtensionContext) {
 
     const configWrapper = new ConfigWrapper();
-    const globPattern = configWrapper.get<string>('globPattern');
-    const textMarkers = configWrapper.get<string[]>('textMarkers');
-    const noteFormat = configWrapper.get<string>('noteFormat');
 
-    const notesTreeProvider = new NotesTreeProvider(textMarkers, globPattern, noteFormat);
+    const notesTreeProvider = new NotesTreeProvider();
     vscode.window.registerTreeDataProvider(VIEWS.treeView, notesTreeProvider);
 
     context.subscriptions.push(
         (new GotoLineCommand()).register(COMMANDS.gotoLine),
         (new OpenFileCommand()).register(COMMANDS.openFile),
-        (new ScanProjectCommand(notesTreeProvider)).register(COMMANDS.scan),
+        (new ScanProjectCommand(
+            notesTreeProvider,
+            configWrapper,
+        )).register(COMMANDS.scan),
     );
 
     (new AutoScanner()).run();

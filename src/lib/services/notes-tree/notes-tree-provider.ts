@@ -8,19 +8,13 @@ import { COMMANDS } from '../../config/constants';
 
 export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
 
-        private notes = Array<Note>();
-        private files = Array<SourceFile>();
-        private dirs = Array<SourceDir>();
+    private notes = Array<Note>();
+    private files = Array<SourceFile>();
+    private dirs = Array<SourceDir>();
 
-        private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
+    private changeEventEmitter: vscode.EventEmitter<null> = new vscode.EventEmitter<null>();
 
-        public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
-
-    constructor(
-        public readonly textMarkers: string[],
-        public readonly globPattern: string,
-        public readonly noteFormat: string,
-    ) {}
+    public onDidChangeTreeData: vscode.Event<null> = this.changeEventEmitter.event;
 
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
         const label = element.toString();
