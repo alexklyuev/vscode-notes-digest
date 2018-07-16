@@ -25,7 +25,7 @@ export class TextScanner {
             readInterface.on('line', (line: string) => {
                 counter += 1;
                 this.textMarkers
-                .filter(textMarker => textMarker.pattern.test(line))
+                .filter(textMarker => textMarker.testLine(line))
                 .forEach(textMarker => {
                     const note = new Note(this.sourceFile, line, counter, textMarker);
                     notes.push(note);
