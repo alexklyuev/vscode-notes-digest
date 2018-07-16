@@ -2,7 +2,7 @@ import * as glob from 'glob';
 
 
 /**
- * TODO: consider using vscode.workspace.findFiles ()
+ * TODO: consider using vscode.workspace.findFiles()
  */
 export class FileScanner {
 

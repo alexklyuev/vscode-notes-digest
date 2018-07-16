@@ -5,13 +5,14 @@ import { COMMANDS } from '../config/constants';
 
 export class OpenFileCommand implements CommandContainer {
 
-    public readonly commandName = COMMANDS.openFile;
-
-    public register() {
-        return vscode.commands.registerCommand(this.commandName, async (uri: vscode.Uri, lineNumber: number, columnNumber: number) => {
-            await vscode.commands.executeCommand('vscode.open', uri);
-            return vscode.commands.executeCommand(COMMANDS.gotoLine, lineNumber, columnNumber);
-        });
+    public register(commandName: string) {
+        return vscode.commands.registerCommand(
+            commandName,
+            async (uri: vscode.Uri, lineNumber: number, columnNumber: number) => {
+                await vscode.commands.executeCommand('vscode.open', uri);
+                return vscode.commands.executeCommand(COMMANDS.gotoLine, lineNumber, columnNumber);
+            },
+        );
     }
 
 }

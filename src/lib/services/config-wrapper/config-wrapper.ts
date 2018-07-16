@@ -11,8 +11,8 @@ export class ConfigWrapper {
         this.config = vscode.workspace.getConfiguration(NS);
     }
 
-    get<T>(option: string): T {
-        return this.config.get<T>(option) !;
+    get<OptionType>(option: string): OptionType {
+        return this.config.get<OptionType>(option) !;
     }
 
 }

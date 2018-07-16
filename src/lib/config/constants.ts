@@ -5,3 +5,7 @@ export const COMMANDS = Object.freeze({
     openFile: `${NS}.openFile`,
     scan: `${NS}.scan`,
 });
+
+export const VIEWS = Object.freeze({
+    treeView: `${NS}.view`,
+});
