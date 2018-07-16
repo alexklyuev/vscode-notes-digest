@@ -23,7 +23,7 @@ export class ProjectTreeBuilder {
             const noteCollections = await Promise.all(
                 files
                 .map(file => new SourceFile(file, this.projectPath))
-                .map(sourceFile => new TextScanner(sourceFile, this.textMarkers))
+                .map(sourceFile => new TextScanner(sourceFile, this.textMarkers, this.notesTreeProvider.noteFormat))
                 .map(scanner => scanner.notes)
             );
             const notes = noteCollections.reduce((acc, coll) => acc.concat(coll), []);

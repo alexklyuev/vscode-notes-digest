@@ -54,6 +54,10 @@
                             "type":"string"
                         },
                         "scope": "window"
+                    },
+                    "notesDigest.noteFormat": {
+                        "type": "string",
+                        "default": "%textMarkerLowerCase [%lineNumber:%columnNumber] %noteText"
                     }
                 }
             }

@@ -13,8 +13,9 @@ export function activate(context: vscode.ExtensionContext) {
     const configWrapper = new ConfigWrapper();
     const globPattern = configWrapper.get<string>('globPattern');
     const textMarkers = configWrapper.get<string[]>('textMarkers');
+    const noteFormat = configWrapper.get<string>('noteFormat');
 
-    const notesTreeProvider = new NotesTreeProvider(textMarkers, globPattern);
+    const notesTreeProvider = new NotesTreeProvider(textMarkers, globPattern, noteFormat);
     vscode.window.registerTreeDataProvider(VIEWS.treeView, notesTreeProvider);
 
     context.subscriptions.push(

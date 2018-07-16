@@ -19,6 +19,7 @@ export class NotesTreeProvider implements vscode.TreeDataProvider<DigestEntry> {
     constructor(
         public readonly textMarkers: string[],
         public readonly globPattern: string,
+        public readonly noteFormat: string,
     ) {}
 
     getTreeItem(element: DigestEntry): vscode.TreeItem | Thenable<vscode.TreeItem> {
