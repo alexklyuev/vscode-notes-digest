@@ -8,13 +8,13 @@ By default shows lines with `TODO:` or `FIXME:` prefix within `.ts` and `.js` fi
 
 ## Configuration
 
-`notesDigest.globPattern` - files to search, default `['TODO:', 'FIXME:']`
+`notesDigest.globPattern` - files to search, defaults are typescript and javascript files, node_modules ignored.
 
-`notesDigest.textMarkers` - prefixes to search and show.
+`notesDigest.textMarkers` - prefixes to search and show, default `["TODO:", "FIXME:"]`.
 
 `notesDigest.noteFormat` - string format in which note will be represented, uses some predefinied variables started with `%`.
 
-Default format is `'%textMarkerLowerCase [%lineNumber:%columnNumber] %noteText'` (result is shown on demo screenshot).
+Default format is `"%textMarkerLowerCase [%lineNumber:%columnNumber] %noteText"` (result is shown on demo screenshot).
 
 Available variables are:
  - `%textMarkerBase`
